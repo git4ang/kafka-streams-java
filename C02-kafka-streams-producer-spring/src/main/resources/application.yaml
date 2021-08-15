@@ -1,0 +1,15 @@
+server:
+  port: 0
+spring:
+  application:
+    name: kafka-streams-producer-spring
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      client-id: kafka-streams-producer-client-id-01
+app4ang:
+  file:
+    filename: "classpath:/file_data.txt"
+
