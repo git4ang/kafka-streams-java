@@ -1,0 +1,10 @@
+
+server:
+  port: 0
+spring:
+  application:
+    name: kafka-streams-producer-java
+
+app4ang:
+  file:
+    filename: "classpath:/file_data.txt"

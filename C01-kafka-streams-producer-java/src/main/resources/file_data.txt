@@ -1,0 +1,48 @@
+Kafka stores key-value messages that come from arbitrarily many processes called producers.
+The data can be partitioned into different "partitions" within different "topics".
+Within a partition, messages are strictly ordered by their offsets (the position of a message within a partition), and indexed and stored together with a timestamp.
+Other processes called "consumers" can read messages from partitions.
+For stream processing, Kafka offers the Streams API that allows writing Java applications that consume data from Kafka and write results back to Kafka.
+Apache Kafka also works with external stream processing systems such as Apache Apex, Apache Flink, Apache Spark, Apache Storm and Apache NiFi.
+
+Kafka runs on a cluster of one or more servers (called brokers), and the partitions of all topics are distributed across the cluster nodes.
+Additionally, partitions are replicated to multiple brokers.
+This architecture allows Kafka to deliver massive streams of messages in a fault-tolerant fashion and has allowed it to replace
+some of the conventional messaging systems like Java Message Service (JMS), Advanced Message Queuing Protocol (AMQP), etc.
+Since the 0.11.0.0 release, Kafka offers transactional writes, which provide exactly-once stream processing using the Streams API.
+
+Kafka supports two types of topics: Regular and compacted.
+Regular topics can be configured with a retention time or a space bound.
+If there are records that are older than the specified retention time or if the space bound is exceeded for a partition, Kafka is allowed to delete old data to free storage space.
+By default, topics are configured with a retention time of 7 days, but it's also possible to store data indefinitely.
+For compacted topics, records don't expire based on time or space bounds.
+Instead, Kafka treats later messages as updates to older message with the same key and guarantees never to delete the latest message per key.
+Users can delete messages entirely by writing a so-called tombstone message with null-value for a specific key.
+
+There are five major APIs in Kafka:
+
+Producer API – Permits an application to publish streams of records.
+Consumer API – Permits an application to subscribe to topics and processes streams of records.
+Connector API – Executes the reusable producer and consumer APIs that can link the topics to the existing applications.
+Streams API – This API converts the input streams to output and produces the result.
+Admin API – used to manage Kafka topics, brokers and other Kafka objects.
+The consumer and producer APIs build on top of the Kafka messaging protocol and offer a reference implementation for Kafka consumer and producer clients in Java.
+The underlying messaging protocol is a binary protocol that developers can use to write their own consumer or producer clients in any programming language.
+This unlocks Kafka from the Java Virtual Machine (JVM) eco-system. A list of available non-Java clients is maintained in the Apache Kafka wiki.
+
+Kafka Connect (or Connect API) is a framework to import/export data from/to other systems.
+It was added in the Kafka 0.9.0.0 release and uses the Producer and Consumer API internally.
+The Connect framework itself executes so-called "connectors" that implement the actual logic to read/write data from other systems.
+The Connect API defines the programming interface that must be implemented to build a custom connector.
+Many open source and commercial connectors for popular data systems are available already.
+However, Apache Kafka itself does not include production ready connectors.
+
+Streams API
+Kafka Streams (or Streams API) is a stream-processing library written in Java. It was added in the Kafka 0.10.0.0 release.
+The library allows for the development of stateful stream-processing applications that are scalable, elastic, and fully fault-tolerant.
+The main API is a stream-processing domain-specific language (DSL) that offers high-level operators like filter, map, grouping, windowing, aggregation, joins, and the notion of tables.
+Additionally, the Processor API can be used to implement custom operators for a more low-level development approach. The DSL and Processor API can be mixed, too.
+For stateful stream processing, Kafka Streams uses RocksDB to maintain local operator state.
+Because RocksDB can write to disk, the maintained state can be larger than available main memory.
+For fault-tolerance, all updates to local state stores are also written into a topic in the Kafka cluster.
+This allows recreating state by reading those topics and feed all data into RocksDB.
